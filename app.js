@@ -138,7 +138,7 @@ projectForm.addEventListener('submit', async (e) => {
 // Generate projects using Google Gemini API - ALWAYS USES REAL AI
 async function generateProjects(formData) {
     // Check if API key is configured
-    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'YOUR_GEMINI_API_KEY_HERE') {
+    if (!GEMINI_API_KEY || GEMINI_API_KEY === 'AIzaSyC6YufwSV1TnYCw--8ofNwolGrQ5-v4dvc') {
         throw new Error('Gemini API key is not configured. Please add your API key in app.js');
     }
 
@@ -146,17 +146,18 @@ async function generateProjects(formData) {
     const prompt = constructPrompt(formData);
 
     try {
-        const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-            method: 'POST',
+        const response = await fetch("/.netlify/functions/generate", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
+                "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    prompt: constructedPrompt
+  })
+});
+
+const data = await response.json();
+
                 generationConfig: {
                     temperature: 0.7,
                     maxOutputTokens: 4096,
